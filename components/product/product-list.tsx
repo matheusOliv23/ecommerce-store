@@ -6,7 +6,16 @@ export default function ProductList({
   title,
   limit,
 }: {
-  data: any;
+  data: {
+    id: string;
+    name: string;
+    slug: string;
+    brand: string;
+    images: string[];
+    price: number;
+    rating: number;
+    stock: number;
+  }[];
   title?: string;
   limit?: number;
 }) {
@@ -16,9 +25,20 @@ export default function ProductList({
       <h2 className='h2-bold mb-4'>{title}</h2>
       {data.length > 0 ? (
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {limitedData.map((item: any) => (
-            <ProductCard product={item} key={item.slug} />
-          ))}
+          {limitedData.map(
+            (item: {
+              id: string;
+              name: string;
+              slug: string;
+              brand: string;
+              images: string[];
+              price: number;
+              rating: number;
+              stock: number;
+            }) => (
+              <ProductCard product={item} key={item.slug} />
+            )
+          )}
         </div>
       ) : (
         <p></p>
