@@ -24,6 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
+      <head>
+        <link rel='icon' href='/favicon.ico' />
+        <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta name='theme-color' content='#000000' />
+        <meta name='description' content={APP_DESCRIPTION} />
+        <meta name='robots' content='index, follow' />
+      </head>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute={'class'}

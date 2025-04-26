@@ -27,6 +27,7 @@ export default function ProductCard({
             width={300}
             height={300}
             priority
+            className='w-full'
           />
         </Link>
       </CardHeader>

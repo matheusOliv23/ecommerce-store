@@ -8,7 +8,7 @@ export default function ProductPrice({
   value: number;
   className?: string;
 }) {
-  const stringValue = value.toFixed(2);
+  const stringValue = value.toString();  
 
   const [intValue, floatValue] = stringValue.split('.');
 

@@ -1,11 +1,13 @@
 import React from 'react';
-import sampleData from '@/db/sample-data';
 import ProductList from '@/components/product/product-list';
+import { getLatestProducts } from '@/lib/actions/product-actions';
 
-export default function Homepage() {
+export default async function Homepage() {
+  const latestProducts = await getLatestProducts();
+
   return (
     <div className='text-xl'>
-      <ProductList data={sampleData?.products} title='Produtos' limit={4} />
+      <ProductList data={latestProducts} title='Produtos' limit={4} />
     </div>
   );
 }
