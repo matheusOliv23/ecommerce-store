@@ -8,7 +8,6 @@ export default function ProductCard({
   product,
 }: {
   product: {
-    id: string;
     name: string;
     slug: string;
     brand: string;

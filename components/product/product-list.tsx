@@ -7,7 +7,6 @@ export default function ProductList({
   limit,
 }: {
   data: {
-    id: string;
     name: string;
     slug: string;
     brand: string;
@@ -27,7 +26,6 @@ export default function ProductList({
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {limitedData.map(
             (item: {
-              id: string;
               name: string;
               slug: string;
               brand: string;
