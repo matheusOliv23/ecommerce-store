@@ -5,10 +5,10 @@ export default function ProductPrice({
   value,
   className,
 }: {
-  value: number;
+  value: string | number;
   className?: string;
 }) {
-  const stringValue = value.toString();  
+  const stringValue = value.toString();
 
   const [intValue, floatValue] = stringValue.split('.');
 

@@ -1,20 +1,13 @@
 import React from 'react';
 import ProductCard from './product-card';
+import { Product } from '@/@types';
 
 export default function ProductList({
   data,
   title,
   limit,
 }: {
-  data: {
-    name: string;
-    slug: string;
-    brand: string;
-    images: string[];
-    price: number;
-    rating: number;
-    stock: number;
-  }[];
+  data: Product[];
   title?: string;
   limit?: number;
 }) {
@@ -24,19 +17,9 @@ export default function ProductList({
       <h2 className='h2-bold mb-4'>{title}</h2>
       {data.length > 0 ? (
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {limitedData.map(
-            (item: {
-              name: string;
-              slug: string;
-              brand: string;
-              images: string[];
-              price: number;
-              rating: number;
-              stock: number;
-            }) => (
-              <ProductCard product={item} key={item.slug} />
-            )
-          )}
+          {limitedData.map((item: Product) => (
+            <ProductCard product={item} key={item.slug} />
+          ))}
         </div>
       ) : (
         <p></p>

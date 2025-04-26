@@ -3,20 +3,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import ProductPrice from './product-price';
+import { Product } from '@/@types';
 
-export default function ProductCard({
-  product,
-}: {
-  product: {
-    name: string;
-    slug: string;
-    brand: string;
-    images: string[];
-    price: number;
-    rating: number;
-    stock: number;
-  };
-}) {
+export default function ProductCard({ product }: { product: Product }) {
   return (
     <Card className='w-full max-w-sm'>
       <CardHeader className='p-0 items-center'>
