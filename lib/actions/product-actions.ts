@@ -13,3 +13,13 @@ export async function getLatestProducts() {
 
   return convertToPlainObject(data);
 }
+
+
+export async function getProductsBySlug(slug: string) {
+  const prisma = new PrismaClient();
+
+  const data = await prisma.product.findFirst({
+    where: { slug },
+  });
+  return data;
+}
