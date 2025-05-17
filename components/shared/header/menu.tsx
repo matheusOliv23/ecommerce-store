@@ -2,7 +2,7 @@ import React from 'react';
 import ModeToggle from './mode-toggle';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { MenuIcon, ShoppingCart, User } from 'lucide-react';
+import { MenuIcon, ShoppingCart } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import UserButton from './user-button';
 
 export default function Menu() {
   return (
@@ -21,11 +22,7 @@ export default function Menu() {
             <ShoppingCart />
           </Link>
         </Button>
-        <Button asChild>
-          <Link href='/sign-in'>
-            <User /> Entrar
-          </Link>
-        </Button>
+        <UserButton />
       </nav>
       <nav className='md:hidden'>
         <Sheet>
@@ -40,11 +37,7 @@ export default function Menu() {
                 <ShoppingCart />{' '}
               </Link>
             </Button>
-            <Button asChild>
-              <Link href='/sign-in'>
-                <User /> Entrar
-              </Link>
-            </Button>
+            <UserButton />
             <SheetDescription></SheetDescription>
           </SheetContent>
         </Sheet>
