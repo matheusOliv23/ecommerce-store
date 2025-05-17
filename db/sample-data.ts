@@ -4,25 +4,25 @@ const sampleData = {
   users: [
     {
       name: 'John Doe',
-      email: 'joh@gmail',
+      email: 'joh@gmail.com',
       password: hashSync('123456', 10),
       role: 'admin',
     },
     {
       name: 'Jane Doe',
-      email: 'jane@gmail',
+      email: 'jane@gmail.com',
       password: hashSync('123456', 10),
       role: 'user',
     },
     {
       name: 'Alice Smith',
-      email: 'alice@gmail',
+      email: 'alice@gmail.com',
       password: hashSync('123456', 10),
       role: 'user',
     },
     {
       name: 'Bob Johnson',
-      email: 'bob@gmail',
+      email: 'bob@gmail.com',
       password: hashSync('123456', 10),
       role: 'user',
     },

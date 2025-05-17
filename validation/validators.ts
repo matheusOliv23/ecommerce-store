@@ -20,3 +20,11 @@ export const insertProductSchema = z.object({
       'O preço deve ser um número válido com duas casas decimais'
     ),
 });
+
+export const signinFormSchema = z.object({
+  email: z.string().email({ message: 'Email inválido' }),
+  password: z
+    .string()
+    .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
+});
+
