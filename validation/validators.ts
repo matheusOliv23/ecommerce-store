@@ -1,6 +1,13 @@
 import { formatNumberWithDecimal } from '@/lib/utils';
 import { z } from 'zod';
 
+export const currency = z
+  .string()
+  .refine(
+    (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
+    'O preço deve ser um número válido com duas casas decimais'
+  );
+
 export const insertProductSchema = z.object({
   name: z.string().min(1, { message: 'O nome é obrigatório' }),
   description: z.string().min(1, { message: 'A descrição é obrigatória' }),
@@ -13,12 +20,7 @@ export const insertProductSchema = z.object({
   slug: z.string().optional(),
   isFeatured: z.boolean(),
   banner: z.string().optional(),
-  price: z
-    .string()
-    .refine(
-      (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
-      'O preço deve ser um número válido com duas casas decimais'
-    ),
+  price: currency,
 });
 
 export const signinFormSchema = z.object({
