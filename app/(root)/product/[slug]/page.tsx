@@ -3,8 +3,8 @@ import { getProductsBySlug } from '@/lib/actions/product-actions';
 import ProductPrice from '@/components/product/product-price';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import ProductImages from '@/components/product/product-images';
+import AddToCart from '@/components/product/add-to-cart';
 
 export default async function ProductDetailsPage(props: {
   params: Promise<{ slug: string }>;
@@ -66,7 +66,16 @@ export default async function ProductDetailsPage(props: {
                 </div>
                 {product.stock > 0 && (
                   <div className='flex-center mt-2'>
-                    <Button className='w-full'>Adicionar ao carrinho</Button>
+                    <AddToCart
+                      item={{
+                        productId: product.id,
+                        name: product.name,
+                        slug: product.slug,
+                        price: product.price.toString(),
+                        quantity: 1,
+                        image: product.images[0],
+                      }}
+                    />{' '}
                   </div>
                 )}
               </CardContent>

@@ -13,6 +13,7 @@ export default function ProductImages({ images }: { images: string[] }) {
         alt='Product Image'
         width={1000}
         height={1000}
+        priority
         className='rounded-md w-full min-h-[300px] object-cover object-center'
       />
       <div className='flex'>
@@ -25,7 +26,7 @@ export default function ProductImages({ images }: { images: string[] }) {
             key={image}
             onClick={() => setCurrent(index)}
           >
-            <Image src={image} alt='image' width={100} height={100} />
+            <Image priority src={image} alt='image' width={100} height={100} />
           </div>
         ))}
       </div>

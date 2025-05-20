@@ -33,3 +33,16 @@ export async function formatError(error: any) {
     return typeof error.message === 'string' ? error.message : JSON.stringify(error.message); 
   }
 }
+
+
+
+export function round2(value: number) {
+  if (typeof value === 'number') {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
+  } else if (typeof value === 'string') {
+    return Math.round((parseFloat(value) + Number.EPSILON) * 100) / 100;
+  } else {
+    throw new Error('Invalid value type');
+  }
+  return Math.round(value * 100) / 100;
+}
