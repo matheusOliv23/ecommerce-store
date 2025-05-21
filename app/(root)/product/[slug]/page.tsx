@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ProductImages from '@/components/product/product-images';
 import AddToCart from '@/components/product/add-to-cart';
+import { getMyCart } from '@/lib/actions/cart-actions';
 
 export default async function ProductDetailsPage(props: {
   params: Promise<{ slug: string }>;
@@ -16,6 +17,8 @@ export default async function ProductDetailsPage(props: {
   if (!product) {
     return <div>Product not found</div>;
   }
+
+  const cart = await getMyCart();
 
   return (
     <div>
@@ -67,6 +70,7 @@ export default async function ProductDetailsPage(props: {
                 {product.stock > 0 && (
                   <div className='flex-center mt-2'>
                     <AddToCart
+                      cart={cart as any}
                       item={{
                         productId: product.id,
                         name: product.name,

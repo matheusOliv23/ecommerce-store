@@ -1,13 +1,19 @@
 'use client';
-import { CartItem } from '@/@types';
+import { Cart, CartItem } from '@/@types';
 import React from 'react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
-import { addItemToCart } from '@/lib/actions/cart-actions';
+import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart-actions';
 import { toast } from 'sonner';
-import { Plus } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 
-export default function AddToCart({ item }: { item: CartItem }) {
+export default function AddToCart({
+  item,
+  cart,
+}: {
+  item: CartItem;
+  cart?: Cart;
+}) {
   const router = useRouter();
 
   const handleAddToCart = async () => {
@@ -29,7 +35,34 @@ export default function AddToCart({ item }: { item: CartItem }) {
     });
   };
 
-  return (
+  const handleRemoveFromCart = async () => {
+    const res = await removeItemFromCart(item.productId);
+
+    toast(res.message, {});
+
+    return;
+  };
+
+  const existingItem = (cart?.items as CartItem[])?.find(
+    (x) => x?.productId === item.productId
+  );
+
+  return existingItem ? (
+    <div className='flex items-center gap-6 justify-between'>
+      <Button type='button' variant={'outline'} onClick={handleRemoveFromCart}>
+        <Minus />
+      </Button>
+      <span>{existingItem.quantity}</span>
+      <Button
+        className=''
+        type='button'
+        onClick={handleAddToCart}
+        variant={'outline'}
+      >
+        <Plus />
+      </Button>
+    </div>
+  ) : (
     <Button className='w-full text-sm' type='button' onClick={handleAddToCart}>
       <Plus className='' />
       Adicionar ao carrinho
