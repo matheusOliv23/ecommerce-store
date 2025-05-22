@@ -46,3 +46,19 @@ export function round2(value: number) {
   }
   return Math.round(value * 100) / 100;
 }
+
+const CURRENCY_FORMATTER = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+  minimumFractionDigits: 2,
+});
+
+export function formatCurrency(value: number | string): string {
+  if (typeof value === 'number') {
+    return CURRENCY_FORMATTER.format(value);
+  } else if (typeof value === 'string') {
+    return CURRENCY_FORMATTER.format(parseFloat(value));
+  } else {
+    throw new Error('Invalid value type');
+  }
+}

@@ -70,7 +70,7 @@ export default async function ProductDetailsPage(props: {
                 {product.stock > 0 && (
                   <div className='flex-center mt-2'>
                     <AddToCart
-                      cart={cart as any}
+                      cart={cart}
                       item={{
                         productId: product.id,
                         name: product.name,
