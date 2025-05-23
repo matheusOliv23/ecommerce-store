@@ -1,4 +1,8 @@
-import { cartItemSchema, insertCartSchema } from '@/validation/cart-schema';
+import {
+  cartItemSchema,
+  insertCartSchema,
+  shippingAddressSchema,
+} from '@/validation/cart-schema';
 import { insertProductSchema } from '@/validation/validators';
 import { z } from 'zod';
 
@@ -11,3 +15,5 @@ export type Product = z.infer<typeof insertProductSchema> & {
 export type Cart = z.infer<typeof insertCartSchema>;
 
 export type CartItem = z.infer<typeof cartItemSchema>;
+
+export type ShippingAddress = z.infer<typeof shippingAddressSchema>;
