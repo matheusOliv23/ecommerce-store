@@ -4,6 +4,7 @@ import { getUserById } from '@/lib/actions/user-actions';
 import { redirect } from 'next/navigation';
 import React from 'react';
 import ShippingAdressForm from './Partials/shipping-adress-form';
+import CheckoutSteps from '@/components/checkout/checkout-steps';
 
 export const metadata = {
   title: 'Shipping Address',
@@ -25,6 +26,7 @@ export default async function ShippingAddressPage() {
 
   return (
     <>
+      <CheckoutSteps currentStep={1} />
       <ShippingAdressForm address={user.address} />
     </>
   );
