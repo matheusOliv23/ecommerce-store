@@ -1,6 +1,8 @@
 import { getOrderById } from '@/lib/actions/order-actions';
 import { notFound } from 'next/navigation';
 import React from 'react';
+import OrderDetailsTable from './order-details-table';
+import { Order, OrderItem, ShippingAddress } from '@/@types';
 
 export const metadata = {
   title: 'Order Details',
@@ -17,5 +19,9 @@ export default async function OrderDetailsPage(props: {
 
   if (!order) notFound();
 
-  return <div>page</div>;
+  return (
+    <div>
+      <OrderDetailsTable order={order as any} />
+    </div>
+  );
 }

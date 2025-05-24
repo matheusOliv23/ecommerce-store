@@ -42,7 +42,7 @@ export default async function PlaceOrderPage() {
   return (
     <div>
       <CheckoutSteps currentStep={3} />
-      <h1 className='text-2xl py-4'>Place Order</h1>
+      <h1 className='text-2xl py-4'>Detalhes da compra</h1>
 
       <div className='grid md:grid-cols-3 md:gap-5'>
         <div className='md:col-span-2 overflow-x-auto space-y-4'>
@@ -115,7 +115,7 @@ export default async function PlaceOrderPage() {
                 </TableBody>
               </Table>
               <div className='mt-3'>
-                <Link href={'/payment-method'}>
+                <Link href={'/cart'}>
                   <Button>Editar</Button>
                 </Link>
               </div>
