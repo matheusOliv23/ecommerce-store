@@ -1,7 +1,6 @@
 import { getMyCart } from '@/lib/actions/cart-actions';
 import React from 'react';
 import CartTable from './Partials/cart-table';
-import { Cart } from '@/@types';
 
 export const metadata = {
   title: 'Carrinho',
@@ -12,7 +11,7 @@ export default async function CartPage() {
 
   return (
     <div>
-      <CartTable cart={cart as Cart} />
+      <CartTable cart={cart as any} />
     </div>
   );
 }
