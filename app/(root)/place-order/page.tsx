@@ -18,6 +18,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
+import PlaceOrderForm from './Partials/place-order-form';
 
 export const metadata = {
   title: 'Place Order',
@@ -141,6 +142,7 @@ export default async function PlaceOrderPage() {
                 <div>Total da compra</div>
                 <div>{formatCurrency(cart.totalPrice)}</div>
               </div>
+              <PlaceOrderForm />
             </CardContent>
           </Card>
         </div>
