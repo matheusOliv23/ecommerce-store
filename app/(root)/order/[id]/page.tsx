@@ -2,7 +2,6 @@ import { getOrderById } from '@/lib/actions/order-actions';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import OrderDetailsTable from './order-details-table';
-import { Order, OrderItem, ShippingAddress } from '@/@types';
 
 export const metadata = {
   title: 'Order Details',

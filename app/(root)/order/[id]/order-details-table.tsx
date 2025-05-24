@@ -80,7 +80,7 @@ export default function OrderDetailsTable({ order }: { order: Order }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(OrderItems as OrderItem[]).map((item) => (
+                {(OrderItems as OrderItem[])?.map((item) => (
                   <TableRow key={item.slug}>
                     <TableCell>
                       <Link
