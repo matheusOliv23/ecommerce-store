@@ -1,12 +1,11 @@
 'use server';
-
 import { auth } from '@/auth';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { getMyCart } from './cart-actions';
 import { getUserById } from './user-actions';
 import { insertOrderSchema } from '@/validation/payment';
 import { prisma } from '@/db/prisma';
-import { CartItem, OrderItem } from '@/@types';
+import { CartItem } from '@/@types';
 import { convertToPlainObject } from '../utils';
 
 export async function createOrder() {
@@ -53,7 +52,7 @@ export async function createOrder() {
       totalPrice: cart.totalPrice,
     });
 
-    const insertedOrderId = await prisma.$transaction(async (tx) => {
+    const insertedOrderId = await prisma.$transaction(async (tx: any) => {
       const insertedOrder = await tx.order.create({ data: order });
 
       for (const item of cart.items as CartItem[]) {
