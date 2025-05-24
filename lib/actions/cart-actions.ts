@@ -7,7 +7,6 @@ import { auth } from '@/auth';
 import { prisma } from '@/db/prisma';
 import { cartItemSchema, insertCartSchema } from '@/validation/cart-schema';
 import { revalidatePath } from 'next/cache';
-import { Prisma } from '../generated/prisma';
 
 const calculateCartPrices = (items: CartItem[]) => {
   const itemsPrice = round2(
@@ -95,7 +94,7 @@ export async function addItemToCart(data: CartItem) {
           id: cart.id,
         },
         data: {
-          items: cart.items as Prisma.CartUpdateitemsInput[],
+          items: cart.items as CartItem[],
           ...calculateCartPrices(cart.items as CartItem[]),
         },
       });
@@ -186,7 +185,7 @@ export async function removeItemFromCart(productId: string) {
         id: cart.id,
       },
       data: {
-        items: cart.items as Prisma.CartUpdateitemsInput[],
+        items: cart.items as CartItem[],
         ...calculateCartPrices(cart.items as CartItem[]),
       },
     });
