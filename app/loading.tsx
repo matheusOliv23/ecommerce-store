@@ -1,6 +1,6 @@
 import React from 'react';
-import loader from '@/assets/animations/loader.gif';
 import Image from 'next/image';
+import loader from '../assets/loader.svg';
 
 export default function LoadingPage() {
   return (
