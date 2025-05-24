@@ -17,7 +17,7 @@ import Image from 'next/image';
 export default function OrderDetailsTable({ order }: { order: Order }) {
   const {
     shippingAddress,
-    OrderItems,
+    OrderItem,
     paidAt,
     deliveredAt,
     itemsPrice,
@@ -28,6 +28,8 @@ export default function OrderDetailsTable({ order }: { order: Order }) {
     isDelivered,
     isPaid,
   } = order;
+
+  console.log('order', order);
 
   return (
     <div>
@@ -80,7 +82,7 @@ export default function OrderDetailsTable({ order }: { order: Order }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(OrderItems as OrderItem[])?.map((item) => (
+                {(OrderItem as OrderItem[])?.map((item) => (
                   <TableRow key={item.slug}>
                     <TableCell>
                       <Link
