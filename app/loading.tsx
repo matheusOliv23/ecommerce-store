@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import loader from '../assets/loader.gif';
 
 export default function LoadingPage() {
   return (
@@ -13,7 +12,7 @@ export default function LoadingPage() {
         width: '100vw',
       }}
     >
-      <Image src={loader} alt='Loading...' width={150} height={150} />
+      <Image src='/loader.gif' alt='Loading...' width={150} height={150} />
     </div>
   );
 }
