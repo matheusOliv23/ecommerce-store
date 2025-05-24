@@ -8,9 +8,9 @@ export const metadata = {
 };
 
 export default async function OrderDetailsPage(props: {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }) {
   const { id } = await props.params;
   const order = await getOrderById(id);
