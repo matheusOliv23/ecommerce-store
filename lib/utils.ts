@@ -62,3 +62,45 @@ export function formatCurrency(value: number | string): string {
     throw new Error('Invalid value type');
   }
 }
+
+
+export function formatId(id: string) {
+  return `..${id.substring(id.length - 6)}`;
+}
+
+export const formatDateTime = (date: Date | string) => {
+  const dateTimeOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'short',
+    month: 'short',
+    year: 'numeric',
+    day: 'numeric',
+  };
+
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  const formatDateTime = new Date(date).toLocaleString(
+    'pt-BR',
+    dateTimeOptions
+  );
+  const formatDate = new Date(date).toLocaleString('pt-BR', dateOptions);
+  const formatTime = new Date(date).toLocaleString('pt-BR', timeOptions);
+
+  return {
+    dateTime: formatDateTime,
+    dateOnly: formatDate,
+    timeOnly: formatTime,
+  };
+};
