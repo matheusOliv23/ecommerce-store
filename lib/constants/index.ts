@@ -6,3 +6,5 @@ export const API_URL =
 export const PAYMENT_METHODS = ['Stripe', 'PayPal', 'Cash on delivery'];
 
 export const DEFAULT_PAYMENT_METHOD = 'Stripe';
+
+export const PAGE_SIZE = 10;
