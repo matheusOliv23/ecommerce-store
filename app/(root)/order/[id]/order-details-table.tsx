@@ -82,7 +82,7 @@ export default function OrderDetailsTable({
 
   console.log('databaseUlrl', process.env.DATABASE_URL);
   console.log('paypalClientId', process.env.PAYPAL_CLIENT_ID);
-  console.log('paypalapi', process.env.PAYPAL_API);
+  console.log('paypalapi', process.env.PAYPAL_API_URL);
   
   
 
