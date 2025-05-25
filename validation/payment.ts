@@ -35,3 +35,11 @@ export const insertOrderItemSchema = z.object({
   image: z.string().min(1, 'Product image is required'),
   price: currency,
 });
+
+
+export const paymentResultSchema = z.object({
+  id: z.string().min(1, 'Payment ID is required'),
+  status: z.string().min(1, 'Payment status is required'),
+  email_address: z.string().email('Invalid email address'),
+  pricePaid: z.string().min(1, 'Price paid is required'),
+});

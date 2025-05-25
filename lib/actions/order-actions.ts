@@ -5,8 +5,10 @@ import { getMyCart } from './cart-actions';
 import { getUserById } from './user-actions';
 import { insertOrderSchema } from '@/validation/payment';
 import { prisma } from '@/db/prisma';
-import { CartItem } from '@/@types';
-import { convertToPlainObject } from '../utils';
+import { CartItem, PaymentResult } from '@/@types';
+import { convertToPlainObject, formatError } from '../utils';
+import { paypal } from '../payments/paypal';
+import { revalidatePath } from 'next/cache';
 
 export async function createOrder() {
   try {
@@ -91,7 +93,7 @@ export async function createOrder() {
       throw error;
     }
 
-    return { success: false, message: 'Error creating order' };
+    return { success: false, message: formatError(error) };
   }
 }
 
@@ -107,4 +109,158 @@ export async function getOrderById(orderId: string) {
   });
 
   return convertToPlainObject(data);
+}
+
+export async function createPaypalOrder(orderId: string) {
+  try {
+    const order = await prisma.order.findFirst({
+      where: {
+        id: orderId,
+      },
+    });
+
+    console.log('order', orderId);
+
+    if (!order) throw new Error('Order not found');
+
+    const paypalOrder = await paypal.createOrder(Number(order.totalPrice));
+
+    console.log('paypalOrder', paypalOrder);
+
+    await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        paymentResult: {
+          id: paypalOrder.id,
+          status: '',
+          pricePaid: 0,
+          email_address: '',
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: 'PayPal order created successfully',
+      data: paypalOrder.id,
+    };
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    return { success: false, message: formatError(error) };
+  }
+}
+
+export async function approvedPayPalOrder(
+  orderId: string,
+  data: {
+    orderID: string;
+  }
+) {
+  try {
+    const order = await prisma.order.findFirst({
+      where: {
+        id: orderId,
+      },
+    });
+
+    if (!order) throw new Error('Order not found');
+
+    const captureData = await paypal.capturePayment(data.orderID);
+
+    if (
+      !captureData ||
+      captureData.id !== (order.paymentResult as PaymentResult)?.id ||
+      captureData.status !== 'COMPLETED'
+    ) {
+      throw new Error('Error capturing PayPal order');
+    }
+
+    console.log('order', orderId);
+
+    await updateOrderToPaid({
+      orderId,
+      paymentResult: {
+        id: captureData.id,
+        status: captureData.status,
+        pricePaid:
+          captureData.purchase_units[0]?.payments?.captures[0]?.amount?.value,
+        email_address: captureData.payer.email_address,
+      },
+    });
+
+    revalidatePath(`/order/${orderId}`);
+
+    return {
+      success: true,
+      message: 'PayPal order approved successfully',
+      data: captureData,
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
+
+async function updateOrderToPaid({
+  orderId,
+  paymentResult,
+}: {
+  orderId: string;
+  paymentResult: PaymentResult;
+}) {
+  const order = await prisma.order.findFirst({
+    where: {
+      id: orderId,
+    },
+    include: {
+      OrderItem: true,
+    },
+  });
+
+  if (!order) throw new Error('Order not found');
+  if (order.isPaid) throw new Error('Order already paid');
+  if (order.paymentResult)
+    throw new Error('Order already has a payment result');
+
+  await prisma.$transaction(async (tx: any) => {
+    for (const item of order.OrderItem) {
+      await tx.product.update({
+        where: {
+          id: item.productId,
+        },
+        data: {
+          stock: {
+            increment: -item.quantity,
+          },
+        },
+      });
+    }
+
+    await tx.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        isPaid: true,
+        paidAt: new Date(),
+        paymentResult,
+      },
+    });
+  });
+
+  const updatedOrder = await prisma.order.findFirst({
+    where: {
+      id: orderId,
+    },
+    include: {
+      OrderItem: true,
+      user: { select: { name: true, email: true } },
+    },
+  });
+
+  if (!updatedOrder) throw new Error('Error updating order');
+  return convertToPlainObject(updatedOrder);
 }

@@ -20,7 +20,10 @@ export default async function OrderDetailsPage(props: {
 
   return (
     <div>
-      <OrderDetailsTable order={order as any} />
+      <OrderDetailsTable
+        order={order as any}
+        paypalClientId={process.env.PAYPAL_CLIENT_ID || 'sb'}
+      />
     </div>
   );
 }

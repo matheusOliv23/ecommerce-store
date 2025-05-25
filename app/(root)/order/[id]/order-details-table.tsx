@@ -1,3 +1,4 @@
+'use client';
 import { Order, OrderItem } from '@/@types';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,8 +14,24 @@ import { formatCurrency, formatDateTime, formatId } from '@/lib/utils';
 import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
+import {
+  PayPalButtons,
+  PayPalScriptProvider,
+  usePayPalScriptReducer,
+} from '@paypal/react-paypal-js';
+import {
+  approvedPayPalOrder,
+  createPaypalOrder,
+} from '@/lib/actions/order-actions';
+import { toast } from 'sonner';
 
-export default function OrderDetailsTable({ order }: { order: Order }) {
+export default function OrderDetailsTable({
+  order,
+  paypalClientId,
+}: {
+  order: Order;
+  paypalClientId: string;
+}) {
   const {
     shippingAddress,
     OrderItem,
@@ -29,7 +46,39 @@ export default function OrderDetailsTable({ order }: { order: Order }) {
     isPaid,
   } = order;
 
-  console.log('order', order);
+  const PrintLoadingState = () => {
+    const [{ isPending, isRejected }] = usePayPalScriptReducer();
+
+    let status = '';
+
+    if (isPending) {
+      status = 'Aguarde...';
+    } else if (isRejected) {
+      status = 'Erro ao carregar o PayPal';
+    }
+
+    return status;
+  };
+
+  const handleCreatePaypalOrder = async () => {
+    const res = await createPaypalOrder(order.id);
+    if (!res.success) {
+      toast.error(res.message);
+      return;
+    }
+
+    return res.data;
+  };
+
+  const handleApprovePaypalOrder = async (data: { orderID: string }) => {
+    const res = await approvedPayPalOrder(order.id, data);
+    if (!res.success) {
+      toast.error(res.message);
+      return;
+    }
+
+    toast.success('Pagamento realizado com sucesso');
+  };
 
   return (
     <div>
@@ -111,8 +160,8 @@ export default function OrderDetailsTable({ order }: { order: Order }) {
             </Table>
           </Card>
         </div>
-        <div>
-          <Card>
+        <div className='mt-6 md:mt-0'>
+          <Card className='w-full'>
             <CardContent className='p-4 gap-4 space-y-4'>
               <div className='flex justify-between'>
                 <div>Itens</div>
@@ -130,6 +179,20 @@ export default function OrderDetailsTable({ order }: { order: Order }) {
                 <div>Total da compra</div>
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
+
+              {!isPaid && paymentMethod === 'PayPal' && (
+                <PayPalScriptProvider
+                  options={{
+                    clientId: paypalClientId,
+                  }}
+                >
+                  <PrintLoadingState />
+                  <PayPalButtons
+                    createOrder={handleCreatePaypalOrder}
+                    onApprove={handleApprovePaypalOrder}
+                  />
+                </PayPalScriptProvider>
+              )}
             </CardContent>
           </Card>
         </div>
