@@ -80,6 +80,12 @@ export default function OrderDetailsTable({
     toast.success('Pagamento realizado com sucesso');
   };
 
+  console.log('databaseUlrl', process.env.DATABASE_URL);
+  console.log('paypalClientId', process.env.PAYPAL_CLIENT_ID);
+  console.log('paypalapi', process.env.PAYPAL_API);
+  
+  
+
   return (
     <div>
       <h1 className='py-4 text-2xl'>Pedido {formatId(order.id)}</h1>
