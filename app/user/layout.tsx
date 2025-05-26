@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import MainNav from './main-nav';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function UserLayout({
   children,
@@ -34,6 +35,7 @@ export default function UserLayout({
           {children}
         </div>
       </section>
+      <Toaster />
     </>
   );
 }

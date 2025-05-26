@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table';
 import { formatCurrency, formatDateTime, formatId } from '@/lib/utils';
 import Pagination from '@/components/shared/pagination';
+import { PAGE_SIZE } from '@/lib/constants';
 
 export const metadata = {
   title: 'Meus Pedidos',
@@ -24,7 +25,7 @@ export default async function OrdersPage(props: {
 
   const orders = await getMyOrders({
     page: Number(page) || 1,
-    limit: 1,
+    limit: PAGE_SIZE,
   });
 
   return (
