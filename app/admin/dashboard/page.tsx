@@ -14,6 +14,7 @@ import { BadgeDollarSign, Barcode, CreditCard, Users } from 'lucide-react';
 import React from 'react';
 
 import SalesChart from './sales-chart';
+import { requireAdmin } from '@/lib/auth-guard';
 
 export const metadata = {
   title: 'Dashboard',
@@ -21,6 +22,8 @@ export const metadata = {
 };
 
 export default async function DashboardPage() {
+  await requireAdmin();
+
   const session = await auth();
 
   if (!session || !session.user || session.user.role !== 'admin') {
