@@ -10,6 +10,7 @@ import { convertToPlainObject, formatError } from '../utils';
 import { paypal } from '../payments/paypal';
 import { revalidatePath } from 'next/cache';
 import { PAGE_SIZE } from '../constants';
+import { Prisma } from '../generated/prisma/default';
 
 export async function createOrder() {
   try {
@@ -180,8 +181,6 @@ export async function approvedPayPalOrder(
       throw new Error('Error capturing PayPal order');
     }
 
-    console.log('order', orderId);
-
     await updateOrderToPaid({
       orderId,
       paymentResult: {
@@ -297,5 +296,61 @@ export async function getMyOrders({
   return {
     data,
     totalPages: Math.ceil(dataCount / limit),
+  };
+}
+
+export async function getOrdersSummary() {
+  const ordersCount = await prisma.order.count();
+  const productsCount = await prisma.product.count();
+  const usersCount = await prisma.user.count();
+
+  const totalSales = await prisma.order.aggregate({
+    _sum: {
+      totalPrice: true,
+    },
+    where: {
+      isPaid: true,
+    },
+  });
+
+  const pendingSales = await prisma.order.aggregate({
+    _sum: {
+      totalPrice: true,
+    },
+    where: {
+      isPaid: false,
+    },
+  });
+
+  // prettier-ignore
+  const salesDataRaw = await prisma.$queryRaw<Array<{ month: string;  totalSales: Prisma.Decimal}>>`SELECT to_char("createdAt", 'MM/YY') as "month", sum("totalPrice") as "totalSales" FROM "Order" GROUP BY to_char("createdAt", 'MM/YY')`;
+
+  const salesData = salesDataRaw.map((item) => ({
+    month: item.month,
+    totalSales: Number(item.totalSales),
+  }));
+
+  const latestSales = await prisma.order.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    take: 5,
+  });
+
+  return {
+    ordersCount,
+    productsCount,
+    usersCount,
+    totalSales,
+    latestSales,
+    salesData,
+    pendingSales,
   };
 }

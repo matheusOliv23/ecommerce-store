@@ -129,3 +129,10 @@ export function formatUrlQuery({
     }
   );
 }
+
+const NUMBER_FORMATTER = new Intl.NumberFormat('pt-BR');
+
+export function formatNumber(value: number): string {
+  return NUMBER_FORMATTER.format(value);
+}
+ 
