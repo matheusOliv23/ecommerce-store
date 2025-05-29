@@ -11,7 +11,10 @@ import {
   paymentResultSchema,
 } from '@/validation/payment';
 import { updateProfileSchema } from '@/validation/user-schema';
-import { insertProductSchema } from '@/validation/validators';
+import {
+  insertProductSchema,
+  updateProductSchema,
+} from '@/validation/validators';
 import { z } from 'zod';
 
 export type Product = z.infer<typeof insertProductSchema> & {
@@ -47,3 +50,5 @@ export type OrderItem = z.infer<typeof insertOrderItemSchema>;
 export type PaymentResult = z.infer<typeof paymentResultSchema>;
 
 export type UpdateProfile = z.infer<typeof updateProfileSchema>;
+
+export type UpdateProduct = z.infer<typeof updateProductSchema>; 

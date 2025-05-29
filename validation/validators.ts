@@ -47,3 +47,6 @@ export const signUpFormSchema = z
     path: ['confirmPassword'],
   });
 
+export const updateProductSchema = insertProductSchema.extend({
+  id: z.string().min(1, { message: 'O ID do produto é obrigatório' }),
+});

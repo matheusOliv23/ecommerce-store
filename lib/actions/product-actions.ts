@@ -1,8 +1,13 @@
 'use server';
 import { prisma } from '@/db/prisma';
-import { convertToPlainObject } from '../utils';
+import { convertToPlainObject, formatError } from '../utils';
 import { PAGE_SIZE } from '../constants';
 import { revalidatePath } from 'next/cache';
+import { Product, UpdateProduct } from '@/@types';
+import {
+  insertProductSchema,
+  updateProductSchema,
+} from '@/validation/validators';
 
 export async function getLatestProducts() {
   const data = await prisma.product.findMany({
@@ -61,12 +66,72 @@ export async function deleteProduct(id: string) {
 
     return {
       success: true,
-      message: 'Product deleted successfully',
+      message: 'Produto deletado com sucesso',
     };
   } catch (error) {
     return {
       success: false,
-      message: 'Failed to delete product',
+      message: formatError(error),
+    };
+  }
+}
+
+export async function createProduct(data: Product) {
+  try {
+    const product = insertProductSchema.parse(data);
+
+    if (!product.slug) {
+      throw new Error('Slug is required');
+    }
+
+    await prisma.product.create({
+      data: {
+        ...product,
+        slug: product.slug as string,
+      },
+    });
+
+    revalidatePath('/admin/products');
+
+    return {
+      success: true,
+      message: 'Produto criado com sucesso',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
+
+export async function updateProduct(data: UpdateProduct) {
+  try {
+    const product = updateProductSchema.parse(data);
+    const productExists = await prisma.product.findFirst({
+      where: { id: product.id },
+    });
+
+    if (!productExists) throw new Error('Product not found');
+
+    await prisma.product.update({
+      where: { id: product.id },
+      data: {
+        ...product,
+        slug: product.slug as string,
+      },
+    });
+
+    revalidatePath('/admin/products');
+
+    return {
+      success: true,
+      message: 'Produto atualizado com sucesso',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
     };
   }
 }

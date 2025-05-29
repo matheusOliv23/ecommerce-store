@@ -16,24 +16,24 @@ export async function createOrder() {
   try {
     const session = await auth();
     if (!session) {
-      return { success: false, message: 'User not authenticated' };
+      return { success: false, message: 'Usuário não autenticado' };
     }
     const cart = await getMyCart();
     const userId = session?.user?.id;
     if (!userId) {
-      return { success: false, message: 'User not found' };
+      return { success: false, message: 'Usuário não encontrado' };
     }
 
     const user = await getUserById(userId);
 
     if (!cart || cart?.items?.length === 0) {
-      return { success: false, message: 'Cart is empty', redirectTo: '/cart' };
+      return { success: false, message: 'Carrinho vazio', redirectTo: '/cart' };
     }
 
     if (!user?.address) {
       return {
         success: false,
-        message: 'Address not found',
+        message: 'Endereço de entrega não encontrado',
         redirectTo: '/shipping-address',
       };
     }
@@ -41,7 +41,7 @@ export async function createOrder() {
     if (!user?.paymentMethod) {
       return {
         success: false,
-        message: 'Payment method not found',
+        message: 'Método de pagamento não encontrado',
         redirectTo: '/payment-method',
       };
     }
@@ -87,7 +87,7 @@ export async function createOrder() {
 
     return {
       success: true,
-      message: 'Order created successfully',
+      message: 'Pedido criado com sucesso',
       redirectTo: `/order/${insertedOrderId}`,
     };
   } catch (error) {
@@ -121,13 +121,9 @@ export async function createPaypalOrder(orderId: string) {
       },
     });
 
-    console.log('order', orderId);
-
     if (!order) throw new Error('Order not found');
 
     const paypalOrder = await paypal.createOrder(Number(order.totalPrice));
-
-    console.log('paypalOrder', paypalOrder);
 
     await prisma.order.update({
       where: {
@@ -145,7 +141,7 @@ export async function createPaypalOrder(orderId: string) {
 
     return {
       success: true,
-      message: 'PayPal order created successfully',
+      message: 'Pedido Paypal criado com sucesso',
       data: paypalOrder.id,
     };
   } catch (error) {
@@ -196,7 +192,7 @@ export async function approvedPayPalOrder(
 
     return {
       success: true,
-      message: 'PayPal order approved successfully',
+      message: 'Pagamento aprovado com sucesso',
       data: captureData,
     };
   } catch (error) {
@@ -394,7 +390,7 @@ export async function deleteOrder(orderId: string) {
 
     return {
       success: true,
-      message: 'Order deleted successfully',
+      message: 'Pedido excluído com sucesso',
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
@@ -411,7 +407,7 @@ export async function updateOrderToPaidCashOnDelivery(orderId: string) {
 
     return {
       success: true,
-      message: 'Order updated to paid successfully',
+      message: 'Pedido atualizado para pago com sucesso',
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
@@ -445,7 +441,7 @@ export async function deliverOrder(orderId: string) {
 
     return {
       success: true,
-      message: 'Order delivered successfully',
+      message: 'Pedido entregue com sucesso',
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
