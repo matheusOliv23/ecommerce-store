@@ -75,7 +75,7 @@ export default async function AdminProductsPage(props: {
           ))}
         </TableBody>
       </Table>
-      {products?.totalPages && products.totalPages > 1 && (
+      {products.totalPages > 1 && (
         <div className='flex justify-center mt-10 md:justify-end'>
           <Pagination
             page={page}

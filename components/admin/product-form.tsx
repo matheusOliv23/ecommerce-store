@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 import { Card, CardContent } from '../ui/card';
 import Image from 'next/image';
 import { UploadButton } from '@/lib/uploadthing';
+import { Checkbox } from '../ui/checkbox';
 
 export default function ProductForm({
   type,
@@ -85,6 +86,10 @@ export default function ProductForm({
   };
 
   const images = form.watch('images');
+
+  const isFeatured = form.watch('isFeatured');
+
+  const banner = form.watch('banner');
 
   return (
     <Form {...form}>
@@ -209,6 +214,52 @@ export default function ProductForm({
               </FormItem>
             )}
           />
+        </div>
+
+        <div className='upload-field'>
+          Destacar Produto
+          <Card>
+            <CardContent className='space-t-2 mt-2'>
+              <FormField
+                control={form.control}
+                name='isFeatured'
+                render={({ field }) => (
+                  <FormItem className='flex items-center space-x-2'>
+                    <FormControl>
+                      <Checkbox
+                        onCheckedChange={field.onChange}
+                        checked={field.value}
+                      />
+                    </FormControl>
+                    <FormLabel>Destacar Produto</FormLabel>
+                  </FormItem>
+                )}
+              />
+              {isFeatured && banner && (
+                <Image
+                  src={banner}
+                  alt='Featured Product Banner'
+                  className='w-full object-cover rounded-md'
+                  width={1920}
+                  height={680}
+                />
+              )}
+
+              {isFeatured && !banner && (
+                <UploadButton
+                  endpoint={'imageUploader'}
+                  onClientUploadComplete={(res: { url: string }[]) => {
+                    form.setValue('banner', res[0].url);
+                  }}
+                  onUploadError={(error: Error) => {
+                    toast.error(
+                      error.message || 'Erro ao fazer upload da imagem'
+                    );
+                  }}
+                />
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         <div>
