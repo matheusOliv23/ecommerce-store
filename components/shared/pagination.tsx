@@ -7,7 +7,7 @@ import { formatUrlQuery } from '@/lib/utils';
 type PaginationProps = {
   page: number;
   totalPages: number;
-  urlParamName: string;
+  urlParamName?: string;
 };
 
 export default function Pagination({
