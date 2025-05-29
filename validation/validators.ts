@@ -1,5 +1,6 @@
 import { formatNumberWithDecimal } from '@/lib/utils';
 import { z } from 'zod';
+import { updateProfileSchema } from './user-schema';
 
 export const currency = z
   .string()
@@ -30,7 +31,6 @@ export const signinFormSchema = z.object({
     .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
 });
 
-
 export const signUpFormSchema = z
   .object({
     name: z.string().min(3, { message: 'O nome é obrigatório' }),
@@ -49,4 +49,11 @@ export const signUpFormSchema = z
 
 export const updateProductSchema = insertProductSchema.extend({
   id: z.string().min(1, { message: 'O ID do produto é obrigatório' }),
+});
+
+export const updateUserSchema = updateProfileSchema.extend({
+  id: z.string().min(1, { message: 'O ID do usuário é obrigatório' }),
+  role: z.string().min(1, {
+    message: 'O papel do usuário é obrigatório',
+  }),
 });

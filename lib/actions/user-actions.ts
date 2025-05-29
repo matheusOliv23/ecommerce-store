@@ -6,7 +6,7 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { hashSync } from 'bcrypt-ts-edge';
 import { prisma } from '@/db/prisma';
 import { formatError } from '../utils';
-import { PaymentMethod, ShippingAddress } from '@/@types';
+import { PaymentMethod, ShippingAddress, UpdateUser } from '@/@types';
 import { shippingAddressSchema } from '@/validation/cart-schema';
 import { paymentMethodSchema } from '@/validation/payment';
 import { PAGE_SIZE } from '../constants';
@@ -204,6 +204,26 @@ export async function deleteUser(id: string) {
 
     revalidatePath('/admin/users');
     return { success: true, message: 'Usuário deletado com sucesso' };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
+
+export async function updateUser(user: UpdateUser) {
+  try {
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        name: user.name,
+        role: user.role,
+      },
+    });
+
+    revalidatePath('/admin/users');
+
+    return { success: true, message: 'Usuário atualizado com sucesso' };
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
