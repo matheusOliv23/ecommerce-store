@@ -6,6 +6,7 @@ import React from 'react';
 import MainNav from './main-nav';
 import { Toaster } from '@/components/ui/sonner';
 import { Input } from '@/components/ui/input';
+import AdminSearch from '@/components/admin/admin-search';
 
 export default function UserLayout({
   children,
@@ -28,11 +29,7 @@ export default function UserLayout({
             <MainNav className='mx-6' />
             <div className='ml-auto items-center flex space-x-4'>
               <section>
-                <Input
-                  type='search'
-                  placeholder='Buscar...'
-                  className='md:w-[100px] lg:w-[300px]'
-                />
+                <AdminSearch />
               </section>
               <Menu />
             </div>

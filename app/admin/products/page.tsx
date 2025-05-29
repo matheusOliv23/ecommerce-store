@@ -36,7 +36,19 @@ export default async function AdminProductsPage(props: {
   return (
     <section className='space-y-2'>
       <div className='flex-between'>
-        <h1 className='h2-bold'>Produtos</h1>
+        <div className='flex items-center gap-3'>
+          <h1 className='h2-bold'>Produtos</h1>
+          {searchText && (
+            <div>
+              Filtrado por <i>&quot;{searchText}&quot;</i>
+              <Link href={'/admin/products'} className='ml-2'>
+                <Button variant={'outline'} size={'sm'}>
+                  Limpar filtro
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
         <Button asChild variant={'default'}>
           <Link href={'/admin/products/create'}>Adicionar Produto</Link>
         </Button>
