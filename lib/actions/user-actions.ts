@@ -9,6 +9,7 @@ import { formatError } from '../utils';
 import { PaymentMethod, ShippingAddress } from '@/@types';
 import { shippingAddressSchema } from '@/validation/cart-schema';
 import { paymentMethodSchema } from '@/validation/payment';
+import { PAGE_SIZE } from '../constants';
 
 export async function signInWithCredentials(
   prevState: unknown,
@@ -167,4 +168,27 @@ export async function updateUserProfile(user: { name: string; email: string }) {
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
+}
+
+export async function getAllUsers({
+  limit = PAGE_SIZE,
+  page,
+}: {
+  limit?: number;
+  page: number;
+}) {
+  const data = await prisma.user.findMany({
+    take: limit,
+    skip: (page - 1) * limit,
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  const dataCount = await prisma.user.count();
+
+  return {
+    data,
+    totalPages: Math.ceil(dataCount / limit),
+  };
 }
