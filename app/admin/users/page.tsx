@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getAllUsers } from '@/lib/actions/user-actions';
+import { deleteUser, getAllUsers } from '@/lib/actions/user-actions';
 import { formatCurrency, formatDateTime, formatId } from '@/lib/utils';
 import Link from 'next/link';
 import React from 'react';
@@ -70,7 +70,7 @@ export default async function AdminUsersPage(props: {
                       Editar
                     </Link>
                   </Button>
-                  {/* <DeleteDialog id={user.id} action={} /> */}
+                  <DeleteDialog id={user.id} action={deleteUser} />
                 </TableCell>
               </TableRow>
             ))}

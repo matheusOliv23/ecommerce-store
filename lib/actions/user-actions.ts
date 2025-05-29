@@ -10,6 +10,7 @@ import { PaymentMethod, ShippingAddress } from '@/@types';
 import { shippingAddressSchema } from '@/validation/cart-schema';
 import { paymentMethodSchema } from '@/validation/payment';
 import { PAGE_SIZE } from '../constants';
+import { revalidatePath } from 'next/cache';
 
 export async function signInWithCredentials(
   prevState: unknown,
@@ -191,4 +192,19 @@ export async function getAllUsers({
     data,
     totalPages: Math.ceil(dataCount / limit),
   };
+}
+
+export async function deleteUser(id: string) {
+  try {
+    await prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath('/admin/users');
+    return { success: true, message: 'Usuário deletado com sucesso' };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
 }
