@@ -142,3 +142,12 @@ export async function updateProduct(data: UpdateProduct) {
     };
   }
 }
+
+export async function getAllCategories() {
+  const data = await prisma.product.groupBy({
+    by: ['category'],
+    _count: true,
+  });
+
+  return convertToPlainObject(data);
+}
