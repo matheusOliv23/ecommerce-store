@@ -65,9 +65,7 @@ export default async function AdminProductsPage(props: {
               <TableCell>{product.rating}</TableCell>
               <TableCell>
                 <Button asChild variant={'outline'} size={'sm'}>
-                  <Link href={`/admin/products/${product.id}/edit`}>
-                    Editar
-                  </Link>
+                  <Link href={`/admin/products/${product.id}`}>Editar</Link>
                 </Button>
                 <DeleteDialog id={product.id} action={deleteProduct} />
               </TableCell>
