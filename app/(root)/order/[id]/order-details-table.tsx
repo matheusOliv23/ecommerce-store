@@ -22,15 +22,20 @@ import {
 import {
   approvedPayPalOrder,
   createPaypalOrder,
+  deliverOrder,
+  updateOrderToPaidCashOnDelivery,
 } from '@/lib/actions/order-actions';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 export default function OrderDetailsTable({
   order,
   paypalClientId,
+  isAdmin = false,
 }: {
   order: Order;
   paypalClientId: string;
+  isAdmin?: boolean;
 }) {
   const {
     shippingAddress,
@@ -80,11 +85,57 @@ export default function OrderDetailsTable({
     toast.success('Pagamento realizado com sucesso');
   };
 
-  console.log('databaseUlrl', process.env.DATABASE_URL);
-  console.log('paypalClientId', process.env.PAYPAL_CLIENT_ID);
-  console.log('paypalapi', process.env.PAYPAL_API_URL);
-  
-  
+  const MarkAsPaidButton = () => {
+    const [isPending, startTransition] = React.useTransition();
+
+    return (
+      <Button
+        type='button'
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await updateOrderToPaidCashOnDelivery(order.id);
+
+            if (!res.success) {
+              toast.error(res.message);
+              return;
+            }
+            toast.success(res.message);
+          })
+        }
+      >
+        {isPending ? 'Marcando como pago...' : 'Marcar como Pago'}
+      </Button>
+    );
+  };
+
+  const MarkAsDeliveredButton = () => {
+    const [isPending, startTransition] = React.useTransition();
+
+    return (
+      <Button
+        type='button'
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await deliverOrder(order.id);
+
+            if (!res.success) {
+              toast.error(res.message);
+              return;
+            }
+            toast.success(res.message);
+          })
+        }
+      >
+        {isPending ? 'Marcando como entregue...' : 'Marcar como Entregue'}
+      </Button>
+    );
+  };
+
+  console.log('paymentMethod', paymentMethod);
+
+  console.log('order', order);
 
   return (
     <div>
@@ -96,7 +147,7 @@ export default function OrderDetailsTable({
               <h2 className='text-xl pb-4'>Método de Pagamento</h2>
               <p>{paymentMethod}</p>
               {isPaid ? (
-                <Badge variant='secondary'>
+                <Badge variant='secondary' className='text-green-500'>
                   Pago em {formatDateTime(paidAt!).dateTime}{' '}
                 </Badge>
               ) : (
@@ -199,6 +250,11 @@ export default function OrderDetailsTable({
                   />
                 </PayPalScriptProvider>
               )}
+
+              {isAdmin && !isPaid && paymentMethod === 'Cash on delivery' && (
+                <MarkAsPaidButton />
+              )}
+              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />}
             </CardContent>
           </Card>
         </div>
