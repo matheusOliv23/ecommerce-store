@@ -48,6 +48,7 @@ model User {
   session       Session[]
   cart          Cart[]
   order         Order[]
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
 
   @@map("users")
 }
