@@ -17,7 +17,7 @@ export const insertProductSchema = z.object({
   images: z
     .array(z.string())
     .min(1, { message: 'As imagens são obrigatórias' }),
-  slug: z.string().optional(),
+  slug: z.string().min(1, { message: 'O slug é obrigatório' }),
   isFeatured: z.boolean(),
   banner: z.string().optional(),
   price: currency,

@@ -23,6 +23,9 @@ import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import { createProduct, updateProduct } from '@/lib/actions/product-actions';
 import { toast } from 'sonner';
+import { Card, CardContent } from '../ui/card';
+import Image from 'next/image';
+import { UploadButton } from '@/lib/uploadthing';
 
 export default function ProductForm({
   type,
@@ -52,11 +55,9 @@ export default function ProductForm({
             stock: 0,
             description: '',
             isFeatured: false,
-            images: ['testestest'],
+            images: [],
           },
   });
-
-  console.log('values', form.formState.errors);
 
   const onSubmit = async (values: Product) => {
     if (type === 'create') {
@@ -82,6 +83,8 @@ export default function ProductForm({
       router.push(`/admin/products/${productId}`);
     }
   };
+
+  const images = form.watch('images');
 
   return (
     <Form {...form}>
@@ -179,7 +182,6 @@ export default function ProductForm({
                 <FormLabel>Preço</FormLabel>
                 <FormControl>
                   <Input
-                    defaultValue={0}
                     type='number'
                     {...field}
                     placeholder='Digite o preço'
@@ -197,7 +199,6 @@ export default function ProductForm({
                 <FormLabel>Estoque</FormLabel>
                 <FormControl>
                   <Input
-                    defaultValue={0}
                     type='number'
                     {...field}
                     placeholder='Digite o estoque'
@@ -224,6 +225,47 @@ export default function ProductForm({
                     placeholder='Descreva seu produto...'
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='upload-field flex flex-col md:flex-row gap-5'>
+          <FormField
+            control={form.control}
+            name='images'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel>Images</FormLabel>
+                <Card>
+                  <CardContent className='space-y-2 mt-2 min-h-48'>
+                    <div className='flex-start space-x-2'>
+                      {images.map((image: string, index: number) => (
+                        <Image
+                          key={image}
+                          src={image}
+                          alt={`Product Image`}
+                          width={100}
+                          height={100}
+                          className='w-20 h-20 object-cover object-center rounded-sm'
+                        />
+                      ))}
+                      <FormControl>
+                        <UploadButton
+                          endpoint={'imageUploader'}
+                          onClientUploadComplete={(res: { url: string }[]) => {
+                            form.setValue('images', [...images, res[0].url]);
+                          }}
+                          onUploadError={(error: Error) => {
+                            toast.error(
+                              error.message || 'Erro ao fazer upload da imagem'
+                            );
+                          }}
+                        />
+                      </FormControl>
+                    </div>
+                  </CardContent>
+                </Card>
                 <FormMessage />
               </FormItem>
             )}
