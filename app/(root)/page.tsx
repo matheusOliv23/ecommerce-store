@@ -6,6 +6,7 @@ import {
 } from '@/lib/actions/product-actions';
 import { Product } from '@/@types';
 import ProductCarousel from '@/components/product/product-carousel';
+import ViewAllProductsButton from '@/components/product/view-all-products';
 
 export default async function Homepage() {
   const latestProducts = (await getLatestProducts()).map((product: any) => ({
@@ -25,6 +26,7 @@ export default async function Homepage() {
     <div className='text-xl'>
       {featureProducts.length > 0 && <ProductCarousel data={featureProducts} />}
       <ProductList data={latestProducts} title='Produtos' limit={4} />
+      <ViewAllProductsButton />
     </div>
   );
 }
