@@ -8,11 +8,6 @@ import {
 import Link from 'next/link';
 import React from 'react';
 
-export const metadata = {
-  title: 'Search',
-  description: 'Search',
-};
-
 const prices = [
   {
     name: 'Todos',
@@ -40,7 +35,49 @@ const prices = [
   },
 ];
 
-const sortOrders = ['newest', 'lowest', 'highest', 'rating'];
+
+export async function generateMetadata(props: {
+  searchParams: Promise<{
+    q?: string;
+    page?: string;
+    category?: string;
+    sort?: string;
+    price?: string;
+    rating?: string;
+  }>;
+}) {
+  const {
+    q = 'all',
+    category = 'all',
+    price = 'all',
+    rating = 'all',
+  } = await props.searchParams;
+
+  const isQuerySet = q && q !== 'all' && q.trim() !== '';
+  const isCategorySet = category && category !== 'all';
+  const isPriceSet = price && price !== 'all';
+  const isRatingSet = rating && rating !== 'all';
+
+  if (isQuerySet || isCategorySet || isPriceSet || isRatingSet) {
+    return {
+      title: `Pesquisar - ${q} ${category !== 'all' ? `em ${category}` : ''} ${
+        price !== 'all' ? `para ${price}` : ''
+      } ${rating !== 'all' ? `com nota ${rating}` : ''}`,
+      description: `Pesquisa de resultados por "${q}"${
+        category !== 'all' ? ` na categoria "${category}"` : ''
+      }${price !== 'all' ? ` com preço "${price}"` : ''}${
+        rating !== 'all' ? ` com nota "${rating}"` : ''
+      }`,
+    };
+  }
+
+  return {
+    title: 'Pesquisar Produtos',
+    description: 'Encontre os melhores produtos',
+    keywords: 'produtos, pesquisa, ecommerce, loja online',
+  };
+}
+
 export default async function SearchPage(props: {
   searchParams: Promise<{
     q?: string;
@@ -83,6 +120,8 @@ export default async function SearchPage(props: {
 
     return `/search?${new URLSearchParams(params).toString()}`;
   };
+
+  const sortOrders = ['newest', 'lowest', 'highest', 'rating'];
 
   const products = await getAllProducts({
     query: q,
