@@ -80,7 +80,7 @@ export default function AddToCart({
       {isPending ? (
         <Loader className='w-4 h-4 animate-spin' />
       ) : (
-        <div>
+        <div className='flex items-center'>
           <Plus className='w-4 h-4' />
           <span className='ml-2'>Adicionar ao carrinho</span>
         </div>
