@@ -57,3 +57,15 @@ export const updateUserSchema = updateProfileSchema.extend({
     message: 'O papel do usuário é obrigatório',
   }),
 });
+
+export const insertReviewSchema = z.object({
+  title: z.string().min(1, { message: 'O título é obrigatório' }),
+  description: z.string().min(1, { message: 'A descrição é obrigatória' }),
+  rating: z.coerce
+    .number()
+    .int({ message: 'A nota deve ser um número inteiro' })
+    .min(1, { message: 'A nota deve ser pelo menos 1' })
+    .max(5, { message: 'A nota deve ser no máximo 5' }),
+  productId: z.string().min(1, { message: 'O ID do produto é obrigatório' }),
+  userId: z.string().min(1, { message: 'O ID do usuário é obrigatório' }),
+});
