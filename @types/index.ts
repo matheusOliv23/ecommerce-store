@@ -13,6 +13,7 @@ import {
 import { updateProfileSchema } from '@/validation/user-schema';
 import {
   insertProductSchema,
+  insertReviewSchema,
   updateProductSchema,
   updateUserSchema,
 } from '@/validation/validators';
@@ -22,6 +23,7 @@ export type Product = z.infer<typeof insertProductSchema> & {
   id: string;
   rating: string;
   createdAt: Date;
+  numReviews: number;
 };
 
 export type Cart = z.infer<typeof insertCartSchema>;
@@ -54,4 +56,12 @@ export type UpdateProfile = z.infer<typeof updateProfileSchema>;
 
 export type UpdateProduct = z.infer<typeof updateProductSchema>;
 
-export type UpdateUser = z.infer<typeof updateUserSchema>; 
+export type UpdateUser = z.infer<typeof updateUserSchema>;
+
+export type Review = z.infer<typeof insertReviewSchema> & {
+  id: string;
+  createdAt: Date;
+  user?: {
+    name: string;
+  };
+};

@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader } from '../ui/card';
 import ProductPrice from './product-price';
 import { Product } from '@/@types';
 import { Badge } from '../ui/badge';
+import Rating from './rating';
+import { formatCurrency } from '@/lib/utils';
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
@@ -29,10 +31,13 @@ export default function ProductCard({ product }: { product: Product }) {
           </Link>
         </div>
 
-        <div className='flex-between gap-4'>
-          <p>{product?.rating} </p>
+        <div className='flex-between gap-4 mt-2'>
+          <Rating value={Number(product.rating)} />
           {product.stock > 0 ? (
-            <ProductPrice value={product?.price} />
+            <ProductPrice
+              className='text-base'
+              value={formatCurrency(product?.price)}
+            />
           ) : (
             <p className='text-destructive'>Sem estoque</p>
           )}
