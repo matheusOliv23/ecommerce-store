@@ -10,3 +10,6 @@ export const DEFAULT_PAYMENT_METHOD = 'Stripe';
 export const PAGE_SIZE = 10;
 
 export const USER_ROLES = ['admin', 'user'];
+
+export const SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';

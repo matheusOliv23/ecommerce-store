@@ -27,15 +27,18 @@ import {
 } from '@/lib/actions/order-actions';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import StripePayment from './stripe-payment';
 
 export default function OrderDetailsTable({
   order,
   paypalClientId,
   isAdmin = false,
+  stripeClientSecret,
 }: {
   order: Order;
   paypalClientId: string;
   isAdmin?: boolean;
+  stripeClientSecret?: string | null;
 }) {
   const {
     shippingAddress,
@@ -135,7 +138,7 @@ export default function OrderDetailsTable({
 
   console.log('paymentMethod', paymentMethod);
 
-  console.log('order', order);
+  console.log('order', stripeClientSecret);
 
   return (
     <div>
@@ -249,6 +252,14 @@ export default function OrderDetailsTable({
                     onApprove={handleApprovePaypalOrder}
                   />
                 </PayPalScriptProvider>
+              )}
+
+              {!isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
+                <StripePayment
+                  priceInCents={Math.round(Number(totalPrice) * 100)}
+                  orderId={order.id}
+                  clientSecret={stripeClientSecret}
+                />
               )}
 
               {isAdmin && !isPaid && paymentMethod === 'Cash on delivery' && (
