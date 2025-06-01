@@ -2,6 +2,7 @@ import React, { FormEvent } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   Elements,
+  LinkAuthenticationElement,
   PaymentElement,
   useElements,
   useStripe,
@@ -77,6 +78,7 @@ function StripeForm({
       <h2 className='text-xl'>Cartão de crédito</h2>
       {error && <p className='text-destructive'>{error}</p>}
       <PaymentElement />
+
       <Button
         type='submit'
         className='w-full'

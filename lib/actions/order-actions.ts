@@ -5,12 +5,13 @@ import { getMyCart } from './cart-actions';
 import { getUserById } from './user-actions';
 import { insertOrderSchema } from '@/validation/payment';
 import { prisma } from '@/db/prisma';
-import { CartItem, PaymentResult } from '@/@types';
+import { CartItem, PaymentResult, ShippingAddress } from '@/@types';
 import { convertToPlainObject, formatError } from '../utils';
 import { paypal } from '../payments/paypal';
 import { revalidatePath } from 'next/cache';
 import { PAGE_SIZE } from '../constants';
 import { Prisma } from '../generated/prisma/default';
+import { sendPurchaseReceipt } from '@/email';
 
 export async function createOrder() {
   try {
@@ -258,7 +259,17 @@ export async function updateOrderToPaid({
   });
 
   if (!updatedOrder) throw new Error('Error updating order');
-  return convertToPlainObject(updatedOrder);
+
+  sendPurchaseReceipt({
+    order: {
+      ...updatedOrder,
+      shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+      user: {
+        name: updatedOrder.user?.name ?? '',
+        email: updatedOrder.user?.email ?? '',
+      },
+    },
+  });
 }
 
 export async function getMyOrders({
